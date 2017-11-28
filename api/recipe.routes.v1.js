@@ -3,6 +3,27 @@ var routes = express.Router();
 const Recipe = require('../model/recipe.model');
 const Ingredient = require('../model/ingredient.model');
 
+routes.get('/recipes', function (req, res) {
+    res.contentType('application/json');
+    Recipe.find({})
+        .then(function (recipes) {
+            res.status(200).json(recipes);
+        })
+        .catch((error) => {
+            res.status(400).json(error);
+        });
+});
+
+routes.get('/recipes/:id', function (req, res) {
+    res.contentType('application/json');
+    Recipe.find({"_id": req.params.id})
+        .then(function (recipes) {
+            res.status(200).json(recipes);
+        })
+        .catch((error) => {
+            res.status(400).json(error);
+        });
+});
 
 routes.post('/recipes', function (req, res) {
     res.contentType('application/json');
@@ -23,8 +44,8 @@ routes.put('/recipes/:id', function (req, res, next) {
     const recipeId = req.params.id;
     const recipeProps = req.body;
 
-    Recipe.findOneAndUpdate({_id: recipeId }, recipeProps)
-        .then(() => Recipe.findById({ _id: recipeId }) )
+    Recipe.findOneAndUpdate({_id: recipeId}, recipeProps)
+        .then(() => Recipe.findById({_id: recipeId}))
         .then(recipe => res.send(recipe))
         .catch(next);
 });
@@ -43,7 +64,7 @@ routes.delete('/recipes/:id', function (req, res, next) {
         .catch(next);
 });
 
-routes.put('/recipes/add/:id', function (req, res,done) {
+routes.put('/recipes/add/:id', function (req, res, done) {
     const recipeId = req.params.id;
     const ingredientProps = req.body;
     const ingredient = Ingredient.findOne({_id: ingredientProps._id});

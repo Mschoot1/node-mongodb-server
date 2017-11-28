@@ -1,14 +1,10 @@
 var express = require('express');
 var routes = express.Router();
-var mongodb = require('../config/mongo.db');
-var User = require('../model/user.model');
+const User = require('../model/user.model');
 
-//
-// Geef een lijst van alle users.
-//
+
 routes.get('/users', function (req, res) {
     res.contentType('application/json');
-
     User.find({})
         .then(function (users) {
             res.status(200).json(users);
