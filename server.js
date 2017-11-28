@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser')
 var logger = require('morgan');
 var mongodb = require('./config/mongo.db');
+var userroutes_v1 = require('./api/user.routes.v1');
 var reciperoutes_v1 = require('./api/recipe.routes.v1');
 var ingredientroutes_v1 = require('./api/ingredient.routes.v1');
 var config = require('./config/env/env');
@@ -49,6 +50,7 @@ app.use(function (req, res, next) {
 // app.use('/api/v1', auth_routes_v1);
 app.use('/api/v1/recipes', reciperoutes_v1);
 app.use('/api/v1/ingredients', ingredientroutes_v1);
+app.use('/api/v1', userroutes_v1);
 
 // Errorhandler voor express-jwt errors
 // Wordt uitgevoerd wanneer err != null; anders door naar next().
