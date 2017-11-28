@@ -32,7 +32,7 @@ module.exports = {
 
         Recipe.findOneAndRemove({name: recipeName})
             .then(recipe => res.status(204).send(recipe));
-    }
+    },
     // edit(req, res, next) {
     //     const recipeId = req.params.id;
     //     const recipeProps = req.body;
@@ -43,12 +43,12 @@ module.exports = {
     //         .catch(next);
     // },
     //
-    // delete(req, res) {
-    //     const recipeId = req.params.id;
-    //
-    //     Recipe.findByIdAndRemove({_id: recipeId})
-    //         .then(recipe => res.status(204).send(recipe))
-    //         .catch(next);
-    // }
+    delete(req, res, next) {
+        const recipeId = req.params.id;
+
+        Recipe.findByIdAndRemove({_id: recipeId})
+            .then(recipe => res.status(204).send(recipe))
+            .catch(next);
+    }
 
 };
