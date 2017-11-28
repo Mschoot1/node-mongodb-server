@@ -1,8 +1,8 @@
-/**
- * Created by Kayvon Rahimi on 24-11-2017.
- */
 var express = require('express');
 
+var routes = express.Router();
+var mongodb = require('../config/mongo.db');
+var User = require('../model/recipe.model');
 
 const RecipeController = require('../controllers/recipe.controller');
 
