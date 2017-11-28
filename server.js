@@ -7,7 +7,6 @@ var userroutes_v1 = require('./api/user.routes.v1');
 var reciperoutes_v1 = require('./api/recipe.routes.v1');
 var ingredientroutes_v1 = require('./api/ingredient.routes.v1');
 var config = require('./config/env/env');
-var routes = require('./api/recipe.routes.v1');
 
 var app = express();
 
@@ -21,7 +20,6 @@ app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 })); // parse application/vnd.api+json as json
-routes(app);
 
 // configureer de app
 app.set('port', (process.env.PORT || config.env.webPort));
@@ -48,8 +46,8 @@ app.use(function (req, res, next) {
 
 // Installeer de routers
 // app.use('/api/v1', auth_routes_v1);
-app.use('/api/v1/recipes', reciperoutes_v1);
-app.use('/api/v1/ingredients', ingredientroutes_v1);
+app.use('/api/v1', reciperoutes_v1);
+app.use('/api/v1', ingredientroutes_v1);
 app.use('/api/v1', userroutes_v1);
 
 // Errorhandler voor express-jwt errors

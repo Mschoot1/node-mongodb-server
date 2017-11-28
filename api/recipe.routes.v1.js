@@ -1,18 +1,58 @@
 var express = require('express');
-
 var routes = express.Router();
-var mongodb = require('../config/mongo.db');
-var User = require('../model/recipe.model');
+const Recipe = require('../model/recipe.model');
+const Ingredient = require('../model/ingredient.model');
 
-const RecipeController = require('../controllers/recipe.controller');
 
-module.exports = (app) => {
-    app.get('/api/v1/recipes', RecipeController.get);
-    app.get('/api/v1/recipes/:id', RecipeController.getById);
-    app.post('/api/v1/recipes', RecipeController.create);
-    app.put('/api/v1/recipes/:id', RecipeController.update);
-    app.put('/api/v1/recipes/addIngredient/:id', RecipeController.addIngredient);
-    // app.post('/api/v1/recipes/:id', RecipeController.edit);
-    app.delete('/api/v1/recipes', RecipeController.deleteByName);
-    app.delete('/api/v1/recipes/:id', RecipeController.delete);
-};
+routes.post('/recipes', function (req, res) {
+    res.contentType('application/json');
+    const recipeProps = req.body;
+
+    Recipe.create(recipeProps)
+        .then(recipe => {
+            recipe.save();
+            res.send(recipe)
+        })
+        .catch((error) => {
+            res.status(400).json(error);
+        });
+});
+routes.put('/recipes/:id', function (req, res, next) {
+    res.contentType('application/json');
+
+    const recipeId = req.params.id;
+    const recipeProps = req.body;
+
+    Recipe.findOneAndUpdate({_id: recipeId }, recipeProps)
+        .then(() => Recipe.findById({ _id: recipeId }) )
+        .then(recipe => res.send(recipe))
+        .catch(next);
+});
+
+routes.delete('/recipes', function (req, res, next) {
+    const recipeName = req.body.name;
+
+    Recipe.findOneAndRemove({name: recipeName})
+        .then(recipe => res.status(204).send(recipe));
+});
+routes.delete('/recipes/:id', function (req, res, next) {
+    const recipeId = req.params.id;
+
+    Recipe.findByIdAndRemove({_id: recipeId})
+        .then(recipe => res.status(204).send(recipe))
+        .catch(next);
+});
+
+routes.put('/recipes/add/:id', function (req, res,done) {
+    const recipeId = req.params.id;
+    const ingredientProps = req.body;
+    const ingredient = Ingredient.findOne({_id: ingredientProps._id});
+    // const newIngredient = new Ingredient({name: ingredientProps.name, amount: ingredientProps.amount});
+    Recipe.findOneAndUpdate(
+        {_id: recipeId},
+        {$push: {ingredients: req.body}},
+        done
+    );
+});
+
+module.exports = routes;
