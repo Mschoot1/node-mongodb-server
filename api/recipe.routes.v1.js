@@ -65,7 +65,7 @@ routes.delete('/recipes/:id', function (req, res, next) {
 });
 
 
-routes.put('/recipes/add/:id', function (req, res, done) {
+routes.put('/recipes/add/:id', function (req, res, next) {
     const recipeId = req.params.id;
     const ingredientProps = req.body;
     Recipe.findOne({_id: recipeId})
@@ -83,18 +83,26 @@ routes.put('/recipes/add/:id', function (req, res, done) {
 });
 
 routes.delete('/recipes/remove/:id', function (req, res,next) {
-    const recipeId = req.params.id;
-    const ingredientProps = req.body;
+     const recipeId = req.params.id;
+     const ingredientProps = req.body;
     Recipe.findOne({_id: recipeId})
         .then((recipe) => {
-            recipe.findOne({_id: ingredientProps._id})
-                .then((doc) => {
-                doc.remove()
+            recipe.ingredients.pull({_id:ingredientProps.ingredients._id})
+                .then(() => {
+                    recipe.save();
                 });
-            recipe.save();
+           // recipe.save();
             res.send(recipe);
         })
         .catch(next)
+    // Recipe.findOneAndUpdate( {'ingredients._id' : ingredientProps.ingredients._id} ,
+    //     {
+    //         $pull: { ingredients: { _id: ingredientProps.ingredients._id }}
+    //     },
+    // {new: true},
+    // function(err, doc){
+    //     console.log(err,doc)
+    // })
 });
 
 module.exports = routes;
