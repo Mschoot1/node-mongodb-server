@@ -43,16 +43,38 @@ routes.delete('/recipes/:id', function (req, res, next) {
         .catch(next);
 });
 
-routes.put('/recipes/add/:id', function (req, res,done) {
+routes.put('/recipes/add/:id', function (req, res,next) {
     const recipeId = req.params.id;
     const ingredientProps = req.body;
-    const ingredient = Ingredient.findOne({_id: ingredientProps._id});
-    // const newIngredient = new Ingredient({name: ingredientProps.name, amount: ingredientProps.amount});
-    Recipe.findOneAndUpdate(
-        {_id: recipeId},
-        {$push: {ingredients: req.body}},
-        done
-    );
+    // ingredient = new Ingredient({name: ingredientProps.name, amount: ingredientProps.amount});
+   // console.log(ingredient);
+    Recipe.findOne({_id: recipeId})
+        .then((recipe) => {
+            recipe.ingredients.push({name: ingredientProps.name, amount: ingredientProps.amount});
+            recipe.save();
+            res.send(recipe);
+        })
+        .catch(next)
+    // Recipe.update(
+    //     {_id: recipeId},
+    //     {$push: {ingredients: ingredient}},
+    //     done
+    // );
+});
+
+routes.delete('/recipes/remove/:id', function (req, res,next) {
+    const recipeId = req.params.id;
+    const ingredientProps = req.body;
+    Recipe.findOne({_id: recipeId})
+        .then((recipe) => {
+            recipe.findOne({_id: ingredientProps._id})
+                .then((doc) => {
+                doc.remove()
+                });
+            recipe.save();
+            res.send(recipe);
+        })
+        .catch(next)
 });
 
 module.exports = routes;

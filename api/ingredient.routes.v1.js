@@ -5,6 +5,13 @@ var express = require('express');
 var routes = express.Router();
 const Ingredient = require('../model/ingredient.model');
 
+    routes.get('/ingredients', function (req, res) {
+        Ingredient.find({})
+            .then((ingredients) => {
+            res.status(200).send(ingredients);
+            })
+    });
+
     routes.post('/ingredients', function (req, res) {
         res.contentType('application/json');
         const ingredientProps = req.body;

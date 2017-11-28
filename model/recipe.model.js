@@ -13,10 +13,10 @@ const RecipeSchema = new Schema({
         type: String
     },
     ingredients: [{
-            // name: String,
-            // amount: Number
-            type: Schema.Types.ObjectId,
-            ref: 'ingredient'
+            name: String,
+            amount: Number
+            // type: Schema.Types.ObjectId,
+            // ref: 'ingredient'
         }]
 });
 
