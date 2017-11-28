@@ -56,6 +56,7 @@ module.exports = {
 
         Recipe.findOneAndRemove({name: recipeName})
             .then(recipe => res.status(204).send(recipe));
+<<<<<<< HEAD
     }
 // edit(req, res, next) {
 //     const recipeId = req.params.id;
@@ -74,6 +75,26 @@ module.exports = {
 //         .then(recipe => res.status(204).send(recipe))
 //         .catch(next);
 // }
+=======
+    },
+    // edit(req, res, next) {
+    //     const recipeId = req.params.id;
+    //     const recipeProps = req.body;
+    //
+    //     Recipe.findByIdAndUpdate({_id: recipeId }, recipeProps)
+    //         .then(() => Recipe.findById({ _id: id }) )
+    //         .then(recipe => res.send(recipe))
+    //         .catch(next);
+    // },
+    //
+    delete(req, res, next) {
+        const recipeId = req.params.id;
+
+        Recipe.findByIdAndRemove({_id: recipeId})
+            .then(recipe => res.status(204).send(recipe))
+            .catch(next);
+    }
+>>>>>>> caac9ea6448a6c8001bfea9e8b43575cf087ee29
 
 }
 ;
